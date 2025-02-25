@@ -28,10 +28,10 @@ const HomePage = () => {
           </h1>
           <p className="text-base md:text-lg font-semibold mt-4">
             We provide the best medical services for all our patients.
-            <br /> We have the best doctors and nurses to take care of you.
-            <br /> We are here to serve you. We provide the best medical
+            We have the best doctors and nurses to take care of you.
+            We are here to serve you. We provide the best medical
             services
-            <br /> for all our patients. We are open 24/7 to take care of you.
+            for all our patients. We are open 24/7 to take care of you.
           </p>
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-5 mt-6 justify-center md:justify-start">

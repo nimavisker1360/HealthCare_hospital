@@ -11,3 +11,22 @@
   padding: 0;
   box-sizing: border-box;
 }
+.cl-formFieldInput {
+  height: 45px !important;
+  border-radius: 2px !important;
+  border: 1px solid #9c9c9c !important;
+  box-shadow: none !important;
+}
+.cl-formButtonPrimary {
+  height: 45px !important;
+  background-color: #16423c !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  border-radius: 2px !important;
+}
+.cl-cardBox {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  z-index: 1 !important;
+  border: 1px solid #9c9c9c !important;
+}
