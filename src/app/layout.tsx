@@ -4,6 +4,7 @@ import "./globals.css";
 import ThemeProvider from "@/theme";
 import { ClerkProvider } from "@clerk/nextjs";
 import { connectMongoDB } from "@/config/mongodb";
+import CustomLayout from "@/custom-layouts";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,11 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <CustomLayout>
+          {children}
+          </CustomLayout>
+        </ThemeProvider>
       </body>
     </html>
   </ClerkProvider>
