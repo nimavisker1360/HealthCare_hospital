@@ -11,6 +11,8 @@
   "dependencies": {
     "@clerk/nextjs": "^6.12.0",
     "antd": "^5.24.2",
+    "mongodb": "^6.13.1",
+    "mongoose": "^8.10.1",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
