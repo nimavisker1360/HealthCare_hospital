@@ -35,5 +35,5 @@ if (mongoose.models && mongoose.models.users) {
   delete mongoose.models.users;
 }
 
-const userModel = mongoose.model("users", userSchema);
-export default userModel;
+const UserModel = mongoose.model("users", userSchema);
+export default UserModel;
