@@ -1,5 +1,5 @@
 import React from "react";
-import { Drawer, List } from "antd";
+import { Button, Drawer, List, message } from "antd";
 import {
   Banknote,
   CalendarClock,
@@ -7,9 +7,11 @@ import {
   GraduationCap,
   LayoutDashboard,
   ListStart,
+  LogOut,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 interface MenuItemsProps {
   showMenuItems: boolean;
@@ -19,6 +21,7 @@ const MenuItems = ({ showMenuItems, setShowMenuItems }: MenuItemsProps) => {
   const iconSize = 16;
   const pathname = usePathname();
   const router = useRouter();
+  const { signOut } = useAuth();
   const menuItems = [
     {
       name: "Dashboard",
@@ -48,17 +51,24 @@ const MenuItems = ({ showMenuItems, setShowMenuItems }: MenuItemsProps) => {
     {
       name: "Staff / Users",
       icon: <ListStart size={iconSize} />,
-      path: "/admin/staff",
+      path: "/admin/users",
     },
   ];
-
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      message.success("Signed out successfully");
+    } catch (error: any) {
+      message.error(error.message);
+    }
+  };
   return (
     <Drawer
       open={showMenuItems}
       onClose={() => setShowMenuItems(false)}
       title="Menu Items"
     >
-      <div className="flex flex-col gap-10  mt-10">
+      <div className="flex flex-col gap-7  mt-10">
         {menuItems.map((item, index) => (
           <div
             key={index}
@@ -76,6 +86,9 @@ const MenuItems = ({ showMenuItems, setShowMenuItems }: MenuItemsProps) => {
             <span className="text-sm">{item.name}</span>
           </div>
         ))}
+        <Button onClick={handleSignOut} icon={<LogOut size={iconSize} />}>
+          Sign Out
+        </Button>
       </div>
     </Drawer>
   );
