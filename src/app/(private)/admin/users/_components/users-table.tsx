@@ -1,13 +1,15 @@
 "use client";
-
 import { IUser } from "@/interfaces";
 import { updateUser } from "@/server-actions/users";
+import { IUsersStore, usersGlobalStore } from "@/store/users-store";
 import { Table, Switch, message } from "antd";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React from "react";
 
 function UsersTable({ users }: { users: IUser[] }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = React.useState(false);
+
+  const { currentUserData }: IUsersStore = usersGlobalStore() as any;
 
   const updateUserHandler = async ({
     userId,
@@ -20,9 +22,9 @@ function UsersTable({ users }: { users: IUser[] }) {
       setLoading(true);
       const { success } = await updateUser({ userId, updatedData });
       if (success) {
-        message.success("User Updated Successfully");
+        message.success("User updated successfully");
       } else {
-        message.error("Failed to update user ");
+        message.error("Failed to update user");
       }
     } catch (error: any) {
       message.error(error.message);
@@ -30,6 +32,7 @@ function UsersTable({ users }: { users: IUser[] }) {
       setLoading(false);
     }
   };
+
   const columns = [
     {
       title: "Name",
@@ -47,11 +50,11 @@ function UsersTable({ users }: { users: IUser[] }) {
       key: "_id",
     },
     {
-      title: "Create At",
+      title: "Created At",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (createAt: string) => (
-        <>{dayjs(createAt).format("MMM DD YYYY , hh:mm A")}</>
+      render: (createdAt: string) => (
+        <> {dayjs(createdAt).format("MMM DD YYYY , hh:mm A")} </>
       ),
     },
     {
@@ -87,15 +90,21 @@ function UsersTable({ users }: { users: IUser[] }) {
       ),
     },
   ];
+
+  // if current user is not super admin, remove isApproved and isSuperAdmin columns
+  if (!currentUserData?.isSuperAdmin) {
+    columns.splice(4, 2);
+  }
+
   return (
     <div>
-    <Table
-      dataSource={users}
-      columns={columns}
-      loading={loading}
-      rowKey="_id"
-    />
-  </div>
+      <Table
+        dataSource={users}
+        columns={columns}
+        loading={loading}
+        rowKey="_id"
+      />
+    </div>
   );
 }
 

@@ -1,26 +1,27 @@
 import Link from "next/link";
 import React, { use, useEffect } from "react";
-import { useState } from "react";
 import Image from "next/image";
-import { IUser } from "@/interfaces";
 import { Alert, Button, message } from "antd";
 import { getUserDataFromMongoDB } from "@/server-actions/users";
+import { IUsersStore, usersGlobalStore } from "@/store/users-store";
 import { Menu } from "lucide-react";
 import Spinner from "@/components/Spinner";
 import MenuItems from "./menu-items";
 
 const PrivateLayout = ({ children }: { children: React.ReactNode }) => {
-  const [userData, setUserData] = useState<IUser | null>(null);
+
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [showMenuItems, setShowMenuItems] = React.useState<boolean>(false);
+  const { setCurrentUserData, currentUserData }: IUsersStore =
+  usersGlobalStore() as any;
 
   const getUserData = async () => {
     try {
       setLoading(true);
       const response: any = await getUserDataFromMongoDB();
       if (response.success) {
-        setUserData(response.data);
+        setCurrentUserData(response.data);
         if (!response.data.isApproved) {
           setError(
             "Your account is not approved yet. Please wait for approval."
@@ -62,7 +63,7 @@ const PrivateLayout = ({ children }: { children: React.ReactNode }) => {
           />
         </Link>
         <div className="flex gap-5 items-center">
-          <span className="text-white text-sm uppercase">{userData?.name}</span>
+          <span className="text-white text-sm uppercase">{currentUserData?.name}</span>
 
           <Button
             ghost
