@@ -34,3 +34,9 @@ table {
   border: 1px solid #9c9c9c;
   margin-top: 20px;
 }
+.ant-form-item {
+  margin-bottom: 0 !important;
+}
+.ant-form-item-label {
+  padding: 0 !important;
+}
