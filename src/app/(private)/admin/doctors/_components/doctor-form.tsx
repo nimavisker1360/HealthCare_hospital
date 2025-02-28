@@ -3,7 +3,7 @@
 import { specializations, workDays, workHours } from "@/constants";
 import { uploadFileToFirebaseAndReturnURL } from "@/helpers/firebase_uploads";
 import { IDoctor } from "@/interfaces";
-import { addDoctor } from "@/server-actions/doctors";
+import { addDoctor, updateDoctor } from "@/server-actions/doctors";
 import { Button, Form, Input, message, Select, Upload } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -14,7 +14,9 @@ interface DoctorFormProps {
 }
 
 const DoctorForm = ({ type = "add", initialValues = {} }: DoctorFormProps) => {
-  const [profilePicture, setProfilePicture] = useState<any>(null);
+  const [profilePicture, setProfilePicture] = useState<any>(
+    initialValues.profilePicture || null
+  );
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
 
@@ -31,6 +33,11 @@ const DoctorForm = ({ type = "add", initialValues = {} }: DoctorFormProps) => {
       let response: any = null;
       if (type == "add") {
         response = await addDoctor(values);
+      } else {
+        response = await updateDoctor({
+          id: initialValues?._id!,
+          data: values,
+        });
       }
 
       if (response.success) {
@@ -51,6 +58,7 @@ const DoctorForm = ({ type = "add", initialValues = {} }: DoctorFormProps) => {
         layout="vertical"
         className="grid grid-cols-4 gap-5"
         onFinish={onSubmit}
+        initialValues={initialValues}
       >
         <Form.Item
           name="name"
@@ -149,7 +157,14 @@ const DoctorForm = ({ type = "add", initialValues = {} }: DoctorFormProps) => {
         </Form.Item>
 
         <div className="col-span-4 flex justify-end gap-5">
-          <Button disabled={loading}>Cancel</Button>
+          <Button
+            disabled={loading}
+            onClick={() => {
+              router.push("/admin/doctors");
+            }}
+          >
+            Cancel
+          </Button>
           <Button type="primary" htmlType="submit" loading={loading}>
             Save
           </Button>
