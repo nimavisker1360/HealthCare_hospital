@@ -2,12 +2,21 @@
 
 import { specializations, workDays, workHours } from "@/constants";
 import { uploadFileToFirebaseAndReturnURL } from "@/helpers/firebase_uploads";
+import { IDoctor } from "@/interfaces";
+import { addDoctor } from "@/server-actions/doctors";
 import { Button, Form, Input, message, Select, Upload } from "antd";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-const DoctorForm = () => {
+interface DoctorFormProps {
+  type?: "add" | "edit";
+  initialValues?: Partial<IDoctor>;
+}
+
+const DoctorForm = ({ type = "add", initialValues = {} }: DoctorFormProps) => {
   const [profilePicture, setProfilePicture] = useState<any>(null);
   const [loading, setLoading] = React.useState(false);
+  const router = useRouter();
 
   const onSubmit = async (values: any) => {
     try {
@@ -19,7 +28,17 @@ const DoctorForm = () => {
       } else {
         values.profilePicture = profilePicture;
       }
-      console.log(values);
+      let response: any = null;
+      if (type == "add") {
+        response = await addDoctor(values);
+      }
+
+      if (response.success) {
+        message.success(response.message);
+        router.push("/admin/doctors");
+      } else {
+        message.error(response.message);
+      }
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -129,7 +148,7 @@ const DoctorForm = () => {
           </Upload>
         </Form.Item>
 
-        <div className="cols-span-4 flex justify-end gap-5">
+        <div className="col-span-4 flex justify-end gap-5">
           <Button disabled={loading}>Cancel</Button>
           <Button type="primary" htmlType="submit" loading={loading}>
             Save
