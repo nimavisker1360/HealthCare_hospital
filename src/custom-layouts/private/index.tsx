@@ -9,12 +9,11 @@ import Spinner from "@/components/Spinner";
 import MenuItems from "./menu-items";
 
 const PrivateLayout = ({ children }: { children: React.ReactNode }) => {
-
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [showMenuItems, setShowMenuItems] = React.useState<boolean>(false);
   const { setCurrentUserData, currentUserData }: IUsersStore =
-  usersGlobalStore() as any;
+    usersGlobalStore() as any;
 
   const getUserData = async () => {
     try {
@@ -54,7 +53,7 @@ const PrivateLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <div className="bg-primary text-white py-8 px-10 flex justify-between items-center">
-        <Link href="/admin/dashboard">
+        <Link href="/">
           <Image
             src="/assets/logo-full.svg"
             alt="logo"
@@ -63,13 +62,11 @@ const PrivateLayout = ({ children }: { children: React.ReactNode }) => {
           />
         </Link>
         <div className="flex gap-5 items-center">
-          <span className="text-white text-sm uppercase">{currentUserData?.name}</span>
+          <span className="text-white text-sm uppercase">
+            {currentUserData?.name}
+          </span>
 
-          <Button
-            ghost
-            size="small"
-            onClick={() => setShowMenuItems(true)}
-          >
+          <Button ghost size="small" onClick={() => setShowMenuItems(true)}>
             <Menu size={16} className="text-white" />
           </Button>
         </div>
@@ -81,11 +78,12 @@ const PrivateLayout = ({ children }: { children: React.ReactNode }) => {
       ) : (
         <div className="p-5">{children}</div>
       )}
-{showMenuItems &&(
-  <MenuItems showMenuItems ={showMenuItems} setShowMenuItems ={setShowMenuItems} />
-
-)}
-      
+      {showMenuItems && (
+        <MenuItems
+          showMenuItems={showMenuItems}
+          setShowMenuItems={setShowMenuItems}
+        />
+      )}
     </div>
   );
 };

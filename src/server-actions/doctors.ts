@@ -72,3 +72,19 @@ export const updateDoctor = async ({
     };
   }
 };
+
+export const deleteDoctor = async (id: string) => {
+  try {
+    await DoctorModel.findByIdAndDelete(id);
+    revalidatePath("/admin/doctors");
+    return {
+      success: true,
+      message: "Doctor deleted successfully",
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};

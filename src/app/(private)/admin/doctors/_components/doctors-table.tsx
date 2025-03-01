@@ -10,6 +10,7 @@ import { deleteDoctor } from "@/server-actions/doctors";
 function DoctorsTable({ doctors }: { doctors: IDoctor[] }) {
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
+  
   const deleteDoctorHandler = async (id: string) => {
     try {
       setLoading(true);

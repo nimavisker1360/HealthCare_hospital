@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Drawer, List, message } from "antd";
+import { Button, Drawer, message } from "antd";
 import {
   Banknote,
   CalendarClock,

@@ -6,22 +6,7 @@ import { Button } from "antd";
 const HomePage = () => {
   return (
     <>
-      {/* هدر سبز مخصوص صفحه اصلی */}
-      {/* <div className="bg-primary text-white py-8 px-10 flex justify-between items-center">
-        <Link href="/">
-          <Image
-            src="/assets/logo-full.svg"
-            alt="logo"
-            width={128}
-            height={256}
-          />
-        </Link>
-        <Link href="/sign-in" className="text-lg underline">
-          Sign-in
-        </Link>
-      </div> */}
-
-      {/* محتوای صفحه */}
+    
       <div className="flex flex-col md:flex-row items-center justify-between mt-24 xl:mt-5 px-10">
         <div className="flex-1 text-center md:text-left">
           <h1 className="text-3xl md:text-4xl font-bold text-primary">
