@@ -3,13 +3,24 @@
 import PageTitle from "@/components/page-title";
 import { workHours, specializations } from "@/constants";
 import { IDoctor, IPatient } from "@/interfaces";
-import { checkDoctorsAvailability } from "@/server-actions/appointments";
+import {
+  checkDoctorsAvailability,
+  saveAppointments,
+} from "@/server-actions/appointments";
 import { Form, Input, Button, Select, message, Alert } from "antd";
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import AvailableDoctors from "./_components/available-doctors";
 import PatientDetails from "./_components/patient-details";
 import { getStripePaymentIntent } from "@/server-actions/payments";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import CreditCardForm from "./_components/credit-card-form";
+import { useRouter } from "next/navigation";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
+);
 
 const BookApPointmentPage = () => {
   const [slotData, setSlotData] = React.useState({
@@ -30,6 +41,9 @@ const BookApPointmentPage = () => {
   const [error, setError] = useState("");
   const [selectedDoctor, setSelectedDoctor] = useState<IDoctor | null>(null);
   const [paymentIntent, setPaymentIntent] = useState("");
+  const [showCreditCardForm, setShowCreditCardForm] = useState(false);
+  const [loadingPaymentIntent, setLoadingPaymentIntent] = useState(false);
+  const router =useRouter()
 
   const checkAvailabilityHandler = async () => {
     try {
@@ -57,6 +71,7 @@ const BookApPointmentPage = () => {
     setAvailableDoctors([]);
   };
   const getPaymentIntent = async () => {
+    setLoadingPaymentIntent(true);
     try {
       const { data, success, message } = await getStripePaymentIntent(
         selectedDoctor?.fee || 0
@@ -66,9 +81,33 @@ const BookApPointmentPage = () => {
         throw new Error(message);
       }
       setPaymentIntent(data.client_secret);
-      console.log(data.client_secret);
+      setShowCreditCardForm(true);
     } catch (error: any) {
       message.error(error.message);
+    } finally {
+      setLoadingPaymentIntent(false);
+    }
+  };
+
+  const onPaymentSuccess = async (paymentId: string) => {
+    try {
+      const response = await saveAppointments({
+        date: slotData.date,
+        time: slotData.time,
+        doctorId: selectedDoctor?._id || "",
+        specialist: slotData.specialist,
+        fee: selectedDoctor?.fee || 0,
+        paymentId,
+        patientDetails,
+      });
+      if(!response.success){
+        throw new Error(response.message);
+      }
+      message.success("Appointment booked successfully");
+      router.push("/appointment-confirmation");
+    } catch (error: any) {{
+  }
+      message.error = error.message;
     }
   };
   return (
@@ -145,10 +184,28 @@ const BookApPointmentPage = () => {
       )}
       {selectedDoctor && (
         <div className="mt-7 gap-5 flex justify-end ">
-          <Button type="primary" onClick={getPaymentIntent}>
+          <Button
+            type="primary"
+            onClick={getPaymentIntent}
+            loading={loadingPaymentIntent}
+          >
             Confirm
           </Button>
         </div>
+      )}
+      {paymentIntent && (
+        <Elements
+          options={{
+            clientSecret: paymentIntent,
+          }}
+          stripe={stripePromise}
+        >
+          <CreditCardForm
+            showCreditCardForm={showCreditCardForm}
+            setShowCreditCardForm={setShowCreditCardForm}
+            onPaymentSuccess={onPaymentSuccess}
+          />
+        </Elements>
       )}
     </div>
   );
