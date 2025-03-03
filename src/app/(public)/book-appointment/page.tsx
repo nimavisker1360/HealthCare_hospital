@@ -104,7 +104,7 @@ const BookApPointmentPage = () => {
         throw new Error(response.message);
       }
       message.success("Appointment booked successfully");
-      router.push("/appointment-confirmation");
+      router.push(`/appointment-confirmation?id=${response.data._id}`);
     } catch (error: any) {{
   }
       message.error = error.message;

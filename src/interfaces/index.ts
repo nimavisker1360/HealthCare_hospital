@@ -32,6 +32,17 @@ export interface IPatient{
   age: number;
   gender: string;
   problem: string;
-
-
+}
+export interface IAppointment {
+  _id: string;
+  date: string;
+  time: string;
+  doctor: IDoctor;
+  patient: IPatient;
+  specialist: string;
+  fee: number;
+  paymentId: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
 }

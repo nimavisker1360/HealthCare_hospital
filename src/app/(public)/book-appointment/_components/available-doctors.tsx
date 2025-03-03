@@ -40,7 +40,7 @@ const AvailableDoctors = ({
               </p>
               <hr />
               <p className="text-sm">
-                Consultation Fee :<b>${doctor.fee}</b>
+                Consultation Fee :<b>₺{doctor.fee}</b>
               </p>
             </div>
           </div>
