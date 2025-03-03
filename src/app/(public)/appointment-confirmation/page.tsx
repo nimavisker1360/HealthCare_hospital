@@ -4,7 +4,7 @@ import PageTitle from "@/components/page-title";
 import { IAppointment } from "@/interfaces";
 import { getAppointmentById } from "@/server-actions/appointments";
 import { Button, Input, message } from "antd";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import AppointmentReceipt from "./_components/appointment-receipt";
 import { useReactToPrint } from "react-to-print";
 
@@ -12,7 +12,11 @@ const AppointmentConfirmation = () => {
   const [appointmentId, setAppointmentId] = useState("");
   const [loading, setLoading] = useState(false);
   const [appointment, setAppointment] = useState<IAppointment | null>(null);
-  const componentRef = React.useRef(null);
+  const componentRef = useRef(null);
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   const getData = async () => {
     try {
@@ -50,13 +54,21 @@ const AppointmentConfirmation = () => {
           </Button>
         </div>
       </div>
-      <div className="w-[600px]">
+
+     <div ref={componentRef} className="flex justify-center mt-20">
+     <div className="w-[600px]" >
         {appointment && <AppointmentReceipt appointment={appointment} />}
       </div>
-      <div className="flex justify-end gap-5 w-[600px]">
-        <Button>Download</Button>
-        <Button type="primary">Print</Button>
-      </div>
+     </div>
+
+      {appointment && (
+        <div className="flex justify-end gap-5 w-[600px]">
+          <Button>Download</Button>
+          <Button type="primary" onClick={handlePrint}>
+            Print
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
