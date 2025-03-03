@@ -6,7 +6,6 @@ import { Button } from "antd";
 const HomePage = () => {
   return (
     <>
-    
       <div className="flex flex-col md:flex-row items-center justify-between mt-24 xl:mt-5 px-10">
         <div className="flex-1 text-center md:text-left">
           <h1 className="text-3xl md:text-4xl font-bold text-primary">
@@ -22,11 +21,18 @@ const HomePage = () => {
             <Link href="/services">
               <Button className="w-full sm:w-auto">View Services</Button>
             </Link>
+
+            <Link href="/appointment-confirmation">
+              <Button className="w-full sm:w-auto">Download Appointment</Button>
+            </Link>
+
             <Link href="/book-appointment">
               <Button type="primary" className="w-full sm:w-auto">
                 Book an Appointment
               </Button>
             </Link>
+
+           
           </div>
         </div>
         <div className="flex-1 flex justify-center mt-10 md:mt-0">

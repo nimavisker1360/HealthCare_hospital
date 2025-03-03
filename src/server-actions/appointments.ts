@@ -5,6 +5,7 @@ import AppointmentModel from "@/models/appointment-model";
 import DoctorModel from "@/models/doctor-model";
 import PatientModel from "@/models/patient-models";
 import dayjs from "dayjs";
+import { revalidatePath } from "next/cache";
 
 export const checkDoctorsAvailability = async ({
   date,
@@ -103,6 +104,53 @@ export const getAppointmentById = async (id: string) => {
     const appointment = await AppointmentModel.findById(id)
       .populate("doctor")
       .populate("patient");
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(appointment)),
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+export const getAllAppointments = async () => {
+  try {
+    const appointments = await AppointmentModel.find()
+      .populate("doctor")
+      .populate("patient")
+      .sort({ createdAt: -1 });
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(appointments)),
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const updateAppointmentStatus = async ({
+  appointmentId,
+  status,
+}: {
+  appointmentId: string;
+  status: string;
+}) => {
+  try {
+    const appointment = await AppointmentModel.findByIdAndUpdate(
+      appointmentId,
+      {
+        status,
+      },
+      {
+        new: true,
+      }
+    );
+    revalidatePath("/admin/appointments");
     return {
       success: true,
       data: JSON.parse(JSON.stringify(appointment)),

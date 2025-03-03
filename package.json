@@ -15,6 +15,8 @@
     "antd": "^5.24.2",
     "dayjs": "^1.11.13",
     "firebase": "^11.4.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.0",
     "lucide-react": "^0.476.0",
     "mongodb": "^6.13.1",
     "mongoose": "^8.10.1",
@@ -22,6 +24,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-to-print": "^2.15.1",
+    "react-use-downloader": "^1.2.8",
     "stripe": "^17.7.0",
     "zustand": "^4.5.5"
   },
