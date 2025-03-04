@@ -56,7 +56,6 @@ function CancelAppointmentModal({
       />
 
       <div className="mt-5 flex justify-end gap-5">
-        <Button disabled={loading}>Close</Button>
         <Button
           danger
           type="primary"

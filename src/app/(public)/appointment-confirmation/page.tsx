@@ -1,41 +1,28 @@
 "use client";
-
 import PageTitle from "@/components/page-title";
 import { IAppointment } from "@/interfaces";
 import { getAppointmentById } from "@/server-actions/appointments";
 import { Button, Input, message } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import AppointmentReceipt from "./_components/appointment-receipt";
 import { useReactToPrint } from "react-to-print";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
+function AppointmentConfirmation() {
+  const searchParams = useSearchParams();
 
-const AppointmentConfirmation = () => {
+  const [appointmentId, setAppointmentId] = React.useState(
+    searchParams.get("id") || ""
+  );
+  const [loading, setLoading] = React.useState(false);
+  const [appointment, setAppointment] = React.useState<IAppointment | null>(
+    null
+  );
+  const componentRef: any = useRef(null);
 
-  const searchParams = new URLSearchParams(window.location.search);
-  const [appointmentId, setAppointmentId] = useState(searchParams.get("id")|| "");
-  const [loading, setLoading] = useState(false);
-  const [appointment, setAppointment] = useState<IAppointment | null>(null);
-  const componentRef = useRef<HTMLDivElement>(null);
-
-  const handleDownloadPDF = async () => {
-    if (!componentRef.current) return;
-
-    const canvas = await html2canvas(componentRef.current);
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const imgWidth = 190;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-    pdf.save("appointment.pdf");
-  };
-
-  const handlePrint = useReactToPrint({
+  const handlePrint: any = useReactToPrint({
     content: () => componentRef.current,
   });
-
   const getData = async () => {
     try {
       setLoading(true);
@@ -43,10 +30,10 @@ const AppointmentConfirmation = () => {
       if (success) {
         setAppointment(data);
       } else {
-        message.error("No Appointment found with given Id");
+        message.error("No appointment found with the given ID");
       }
     } catch (error) {
-      message.error("failed to fetch data");
+      message.error("Failed to fetch data");
     } finally {
       setLoading(false);
     }
@@ -56,17 +43,18 @@ const AppointmentConfirmation = () => {
     if (appointmentId) {
       getData();
     }
-  }, []);
+  }, [searchParams]);
 
   return (
     <div className="p-5 flex flex-col items-center gap-7">
       <div className="justify-center flex">
         <PageTitle title="Appointment Confirmation" />
       </div>
+
       <div className="w-[600px] flex justify-center">
         <div className="flex justify-between gap-5 items-end w-full">
           <div className="w-full">
-            <label className="text-sm">Appointment Id</label>
+            <label className="text-sm">Appointment ID</label>
             <Input
               value={appointmentId}
               onChange={(e) => setAppointmentId(e.target.value)}
@@ -82,13 +70,12 @@ const AppointmentConfirmation = () => {
 
       <div ref={componentRef} className="flex justify-center mt-5">
         <div className="w-[600px]">
-          {appointment && <AppointmentReceipt appointment={appointment} />}
+          {appointment && <AppointmentReceipt appointment={appointment!} />}
         </div>
       </div>
-
       {appointment && (
         <div className="flex justify-end gap-5 w-[600px]">
-          <Button onClick={handleDownloadPDF}>Download</Button>
+          <Button>Download</Button>
           <Button type="primary" onClick={handlePrint}>
             Print
           </Button>
@@ -96,6 +83,6 @@ const AppointmentConfirmation = () => {
       )}
     </div>
   );
-};
+}
 
 export default AppointmentConfirmation;

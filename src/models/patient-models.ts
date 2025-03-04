@@ -1,37 +1,15 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
-const patientSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    phone: {
-      type: String,
-      required: true,
-    },
-    age: {
-      type: Number,
-      required: true,
-    },
-    gender: {
-      type: String,
-      required: true,
-    },
-    problem: {
-      type: String,
-      required: false,
-    },
-  },
-  { timestamps: true }
-);
-
-if (mongoose.models && mongoose.models.patients) {
-  delete mongoose.models.patients;
+export interface IPatient extends Document {
+  name: string;
+  phone: string;
+  email: string;
 }
-const PatientModel = mongoose.model("patients", patientSchema);
-export default PatientModel;
+
+const PatientSchema = new Schema<IPatient>({
+  name: { type: String, required: true },
+  phone: { type: String, required: true },
+  email: { type: String, required: true },
+});
+
+export default mongoose.models.Patient || mongoose.model<IPatient>("Patient", PatientSchema);

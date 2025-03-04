@@ -1,8 +1,9 @@
 import PageTitle from "@/components/page-title";
-import React from "react";
+import React, { Suspense } from "react";
 import DoctorForm from "../../_components/doctor-form";
 import { getDoctorById } from "@/server-actions/doctors";
 import { Alert } from "antd";
+import SpinnerForServerComponents from "@/components/spinner-for-server-components";
 
 interface EditDoctorPageProps {
   params: {
@@ -26,4 +27,11 @@ const EditDoctorPage = async ({ params }: EditDoctorPageProps) => {
   );
 };
 
-export default EditDoctorPage;
+export default function Page(props:EditDoctorPageProps){
+  return<Suspense
+  fallback={<SpinnerForServerComponents/>}
+  >
+    <EditDoctorPage {...props} />
+  </Suspense>
+
+};

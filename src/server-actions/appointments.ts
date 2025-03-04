@@ -178,3 +178,11 @@ export const getAppointmentByPatientId = async (patientId: string) => {
     };
   }
 };
+export const deleteAppointmentId = async (id: string) => {
+  try {
+    await PatientModel.findByIdAndDelete(id);
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+};

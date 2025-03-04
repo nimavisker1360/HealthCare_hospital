@@ -54,7 +54,7 @@ const PatientsTable = ({ patients: initialPatients }: IPatientTableProps) => {
 
   const handleEdit = (patient: IPatient) => {
     setSelectedPatient(patient);
-    form.setFieldsValue(patient); // مقداردهی تمام فیلدها
+    form.setFieldsValue(patient); 
     setShowEditModal(true);
   };
 

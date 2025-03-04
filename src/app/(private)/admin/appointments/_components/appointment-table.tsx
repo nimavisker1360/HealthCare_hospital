@@ -24,7 +24,10 @@ function AppointmentsTable({ appointments }: AppointmentsTableProps) {
     {
       title: "Patient Name",
       dataIndex: "patient",
-      render: (patient: IPatient) => patient.name,
+      render: (patient: IPatient | null) => {
+        console.log("Patient Data: ", patient);
+        return patient ? patient.name : "N/A";
+      },
     },
     {
       title: "Doctor Name",
@@ -45,17 +48,12 @@ function AppointmentsTable({ appointments }: AppointmentsTableProps) {
     {
       title: "Fee",
       dataIndex: "fee",
-      render: (fee: number) => `$${fee}`,
+      render: (fee: number) => `${fee}₺`,
     },
     {
       title: "Status",
       dataIndex: "status",
       render: (status: string) => status.toUpperCase(),
-    },
-    {
-      title:"Booked On",
-      dataIndex:"createdAt",
-      render:(createdAt:string)=>getDateTimeFormat(createdAt)
     },
     {
       title: "Payment ID",
